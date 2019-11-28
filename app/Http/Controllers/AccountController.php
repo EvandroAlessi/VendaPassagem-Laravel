@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class AccountController extends Controller
 {
-    function loginAction($request)
+    function login($request)
     {
         $dao = new UsuarioDAO();
 
@@ -31,13 +31,13 @@ class AccountController extends Controller
         }
     }
 
-    function logoutAction($request)
+    function logout($request)
     {
         $_SESSION["logado"] = false;
         $this->result("Account", "Login");
     }
 
-    function saveAction($request){
+    function save($request){
         $dao = new UsuarioDAO();
 
         $name = isset($request->data['name']) ? $request->data['name']  : '';
@@ -55,7 +55,7 @@ class AccountController extends Controller
         $this->redirect("");
     }
 
-    function registerAction($request){
+    function register($request){
         $this->result("Account", "register");
     }
 

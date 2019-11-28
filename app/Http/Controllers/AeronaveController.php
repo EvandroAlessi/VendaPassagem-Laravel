@@ -6,69 +6,49 @@ use Illuminate\Http\Request;
 
 class AeronaveController extends Controller
 {
-    public function indexAction(){
-        $dao = new AeronaveDAO();
-        $dados['aeronaves'] = $dao->buscarTodos();
-        
-        $dao = new DestinoDAO();
-        $dados['destinos'] = $dao->buscarTodos();
+    public function index(){
+        $dados['aeronaves'] = Aeronave::all();
+        $dados['destinos'] = Destino::all();
 
         return view("aeronaves", ["aeronaves" => $dados['aeronaves'], "destinos"=> $dados['destinos']]);
     }
 
-    public function detailsAction(){
+    public function details(){
         
     }
 
-    public function createAction($request){
-        $dao = new AeronaveDAO();
+    public function create(Request $request){
+        $aeronave = new Aeronave();
 
-        $destinoID = isset($request->data['destinoID']) ? $request->data['destinoID']  : '';
-        $modelo = isset($request->data['modelo']) ? $request->data['modelo']  : '';
-        $qntAssentos = isset($request->data['qntAssentos']) ? $request->data['qntAssentos']  : '';
-        $qntAssentosEspecial = isset($request->data['qntAssentosEspecial']) ? $request->data['qntAssentosEspecial']  : '';
+        $aeronave->destinoID = isset($request->destinoID) ? $request->destinoID : '';
+        $aeronave->modelo = isset($request->modelo) ? $request->modelo : '';
+        $aeronave->qntAssentos = isset($request->qntAssentos) ? $request->qntAssentos : '';
+        $aeronave->qntAssentosEspecial = isset($request->qntAssentosEspecial) ? $request->qntAssentosEspecial : '';
 
-        $dao->inserir(new Aeronave(
-            $destinoID,
-            $modelo,
-            $qntAssentos,
-            $qntAssentosEspecial
-        ));
+        $aeronave.save();
 
-        $this->redirect('aeronaves');
+        redirect('aeronaves');
     }
 
-    public function editAction($request){
+    public function edit(Request $request, $id){
 
-        $dao = new AeronaveDAO();
+        $aeronave = Aeronave::findOrFail($id);
 
-        $destinoID = isset($request->data['destinoID']) ? $request->data['destinoID']  : '';
-        $modelo = isset($request->data['modelo']) ? $request->data['modelo']  : '';
-        $qntAssentos = isset($request->data['qntAssentos']) ? $request->data['qntAssentos']  : '';
-        $qntAssentosEspecial = isset($request->data['qntAssentosEspecial']) ? $request->data['qntAssentosEspecial']  : '';
-        $id = $request->params['id'];
-
-        $aeronave = $dao->buscar($id);
-        $aeronave->setDestinoID($destinoID);
-        $aeronave->setModelo($modelo);
-        $aeronave->setQntAssentos($qntAssentos);
-        $aeronave->setQntAssentosEspecial($qntAssentosEspecial);
-
-        $dao->editar($aeronave);
-
+        $aeronave->destinoID = isset($request->destinoID) ? $request->destinoID : '';
+        $aeronave->modelo = isset($request->modelo) ? $request->modelo : '';
+        $aeronave->qntAssentos = isset($request->qntAssentos) ? $request->qntAssentos : '';
+        $aeronave->qntAssentosEspecial = isset($request->qntAssentosEspecial) ? $request->qntAssentosEspecial : '';
         
-
-        $this->redirect('aeronaves');
+        redirect('aeronaves');
 
     }
 
-    public function deleteAction($request){
+    public function delete($id){
 
-        $dao = new AeronaveDAO();
+        $aeronave = Aeronave::findOrFail($id);
 
-        $dao->excluir($request->params['id']);
-
-        $this->redirect('aeronaves');
-
+        $aeronave.delete();
+        
+        redirect('aeronaves');
     }
 }

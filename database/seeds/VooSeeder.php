@@ -13,10 +13,9 @@ class VooSeeder extends Seeder
     {
         for ($i=0; $i < 10; $i++) { 
             DB::table("Voo")->insert([
-                'destinoID' => rand(),
-                'modelo' => str_random(20),
-                'qntAssentos' => rand(),
-                'qntAssentosEspecial' => rand(),
+                'aeronaveID' => rand(),
+                'dataPartida' => str_random(20),
+                'valorPassagem' => rand()
             ]);
         }
     }
