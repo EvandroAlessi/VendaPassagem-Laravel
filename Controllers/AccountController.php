@@ -59,7 +59,7 @@ class AccountController extends Controller
         $this->result("Account", "register");
     }
 
-    function forgotPasswordAction($request){
+    function forgotPassword($request){
         $this->result("Account", "forgotPassword");
     }
 }

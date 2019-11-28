@@ -17,28 +17,25 @@ class PassageiroController extends Controller
     }
     
     public function create(Request $request){
-        $dao = new PassageiroDAO();
-        $CPF = isset($request->data['CPF']) ? $request->data['CPF']  : '';
-        $RG = isset($request->data['RG']) ? $request->data['RG']  : '';
-        $nome = isset($request->data['nome']) ? $request->data['nome']  : '';
-        $dataNascimento = isset($request->data['dataNascimento']) ? $request->data['dataNascimento']  : '';
-        $dao->inserir(new Passageiro(
-            $CPF,
-            $RG,
-            $nome,
-            $dataNascimento
-        ));
+        $passageiro = new Passageiro();
 
-        $this->redirect('passageiros');
+        $passageiro->CPF = isset($request->CPF) ? $request->CPF : '';
+        $passageiro->RG = isset($request->RG) ? $request->RG : '';
+        $passageiro->nome = isset($request->nome) ? $request->nome : '';
+        $passageiro->dataNascimento = isset($request->dataNascimento) ? $request->dataNascimento : '';
+        
+        $passageiro->save();
+
+        redirect('passageiros');
     }
 
     public function edit($request){
         $dao = new PassageiroDAO();
-        $CPF = isset($request->data['CPF']) ? $request->data['CPF']  : '';
-        $RG = isset($request->data['RG']) ? $request->data['RG']  : '';
-        $nome = isset($request->data['nome']) ? $request->data['nome']  : '';
-        $dataNascimento = isset($request->data['dataNascimento']) ? $request->data['dataNascimento']  : '';
-        $id = $request->params['id'];
+        $CPF = isset($request->CPF) ? $request->CPF : '';
+        $RG = isset($request->RG) ? $request->RG: '';
+        $nome = isset($request->nome) ? $request->nome : '';
+        $dataNascimento = isset($request->dataNascimento) ? $request->dataNascimento : '';
+        
         $passageiro = $dao->buscar($id);
         $passageiro->setCPF($CPF);
         $passageiro->setRG($RG);
@@ -46,13 +43,14 @@ class PassageiroController extends Controller
         $passageiro->setDataNascimento($dataNascimento);
         $dao->editar($passageiro);
 
-        $this->redirect('passageiros');
+        redirect('passageiros');
     }
 
-    public function delete($request){
-        $dao = new PassageiroDAO();
-        $dao->excluir($request->params['id']);
+    public function delete($id){
+        $passageiro = Passageiro::findOrFail($id);
 
-        $this->redirect('passageiros');
+        $passageiro.delete();
+        
+        redirect('passageiros');
     }
 }

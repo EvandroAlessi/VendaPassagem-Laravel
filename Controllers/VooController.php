@@ -18,24 +18,22 @@ class VooController extends Controller
     }
 
     public function create($request){
-        $dao = new VooDAO();
-        $dataPartida = isset($request->data['dataPartida']) ? $request->data['dataPartida']  : '';
-        $valorPassagem = isset($request->data['valorPassagem']) ? $request->data['valorPassagem']  : '';
-        $aeronaveID = isset($request->data['aeronaveID']) ? $request->data['aeronaveID']  : '';
-        $dao->inserir(new Voo(
-            $aeronaveID,
-            $dataPartida,
-            $valorPassagem
-        ));
+        $voo = new Voo();
+
+        $voo->dataPartida = isset($request->dataPartida) ? $request->dataPartida : '';
+        $voo->valorPassagem = isset($request->valorPassagem) ? $request->valorPassagem : '';
+        $voo->aeronaveID = isset($request->aeronaveID) ? $request->aeronaveID : '';
+        
+        $voo->save();
         
         redirect('voos');
     }
 
     public function edit($request){
         $dao = new VooDAO();
-        $dataPartida = isset($request->data['dataPartida']) ? $request->data['dataPartida']  : '';
-        $valorPassagem = isset($request->data['valorPassagem']) ? $request->data['valorPassagem']  : '';
-        $aeronaveID = isset($request->data['aeronaveID']) ? $request->data['aeronaveID']  : '';
+        $dataPartida = isset($request->dataPartida) ? $request->dataPartida : '';
+        $valorPassagem = isset($request->valorPassagem) ? $request->valorPassagem : '';
+        $aeronaveID = isset($request->aeronaveID) ? $request->aeronaveID : '';
         $id = $request->params['id'];
         $voo = $dao->buscar($id);
         $voo->setDataPartida($dataPartida);
@@ -46,9 +44,10 @@ class VooController extends Controller
         redirect('voos');
     }
 
-    public function delete($request){
-        $dao = new VooDAO();
-        $dao->excluir($request->params['id']);
+    public function delete($id){
+        $voo = Voo::findOrFail($id);
+
+        $voo.delete();
         
         redirect('voos');
     }

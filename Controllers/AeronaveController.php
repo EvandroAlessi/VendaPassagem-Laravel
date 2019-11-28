@@ -39,8 +39,9 @@ class AeronaveController extends Controller
         $aeronave->qntAssentos = isset($request->qntAssentos) ? $request->qntAssentos : '';
         $aeronave->qntAssentosEspecial = isset($request->qntAssentosEspecial) ? $request->qntAssentosEspecial : '';
         
-        redirect('aeronaves');
+        $aeronave.save();
 
+        redirect('aeronaves');
     }
 
     public function delete($id){
