@@ -12,5 +12,12 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 });
+
+Route::get('/aeronaves', "AeronaveController@index");
+Route::get('/destinos', "DestinoController@index");
+Route::get('/passageiros', "PassageiroController@index");
+Route::get('/voos', "VooController@index");
+Route::get('/login', "AccountController@loginAction");
+
