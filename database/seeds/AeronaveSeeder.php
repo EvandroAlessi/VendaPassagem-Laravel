@@ -13,10 +13,10 @@ class AeronaveSeeder extends Seeder
     {
         for ($i=0; $i < 10; $i++) { 
             DB::table("Aeronave")->insert([
-                'destinoID' => rand(),
-                'modelo' => str_random(20),
-                'qntAssentos' => rand(),
-                'qntAssentosEspecial' => rand(),
+                'destinoID' => rand(1,10),
+                'modelo' => Str::random(10),
+                'qntAssentos' => rand(1,1000),
+                'qntAssentosEspecial' => rand(1,100),
             ]);
         }
     }

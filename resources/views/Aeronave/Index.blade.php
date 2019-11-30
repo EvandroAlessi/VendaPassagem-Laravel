@@ -1,4 +1,6 @@
+@extends('Layout')
 
+@section('content')
 <h3 style="display: inline-block;margin: 15px;">Aeronaves</h3>
 <button type="button" class="btn btn-primary m-3" style="float:right; margin: 15px;" data-toggle="modal" data-target="#modalAdicionar">Adicionar</button>
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
@@ -28,21 +30,21 @@
                             @foreach ($aeronaves as $entidade)
                                 <tr>
                                     <td>
-                                        {{ $destinos[$entidade->getDestinoID()]->getNomeAeroporto() }}
+                                        {{ $destinos[$entidade->destinoID]->nomeAeroporto }}
                                     </td>
                                     <td>
-                                        {{ $entidade->getModelo() }}
+                                        {{ $entidade->modelo }}
                                     </td>
                                     <td>
-                                        {{ $entidade->getQntAssentos() }}
+                                        {{ $entidade->qntAssentos }}
                                     </td>
                                     <td>
-                                        {{ $entidade->getQntAssentosEspecial() }}
+                                        {{ $entidade->qntAssentosEspecial }}
                                     </td>
                                     
                                     <td style="float: right;">
-                                        <a href="#" data-toggle="modal" data-target="#modalEditar{{ $entidade->getID() }}" style="padding: 3px;"><i class="fa fa-pencil text-navy"></i></a>
-                                        <a href="aeronaves/delete/{{ $entidade->getID() }}" style="padding: 3px;"><i class="fa fa-trash text-danger"></i></a>
+                                        <a href="#" data-toggle="modal" data-target="#modalEditar{{ $entidade->id }}" style="padding: 3px;"><i class="fa fa-pencil text-navy"></i></a>
+                                        <a href="aeronaves/delete/{{ $entidade->id }}" style="padding: 3px;"><i class="fa fa-trash text-danger"></i></a>
                                     </td>
                                 </tr>
 
@@ -65,7 +67,7 @@
 
 @foreach ($aeronaves as $entidade) 
 
-<div class="modal" id="modalEditar{{ $destino->getID() }}" tabindex="-1" role="dialog" aria-labelledby="labelModal" aria-hidden="true">
+<div class="modal" id="modalEditar{{ $entidade->id }}" tabindex="-1" role="dialog" aria-labelledby="labelModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content text-center">
             <div class="modal-header">
@@ -76,27 +78,27 @@
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
-                    <form id="formAdicionar{{ $destino->getID() }}" action="aeronaves/edit/{{ $destino->getID() }}" method="POST">
-                    <td> 
+                    <form id="formAdicionar{{ $entidade->id }}" action="aeronaves/edit/{{ $entidade->id }}" method="POST">
+                        {{ csrf_field() }}
                         <div class="form-group">
                             <label for="inputAddTitulo">Destino</label>
-                            <select  class="form-control" name="destinoID" value="{{ $entidade->getDestinoID() }}">                
+                            <select  class="form-control" name="destinoid" value="{{ $entidade->destinoID }}">                
                                 @foreach($destinos as $destino)
-                                    <option value="{{ $destino->getID() }}" {{ $entidade->getDestinoID() == $destino->getID() ? 'selected' : '' }}>{{ $destino->getNomeAeroporto() }}</option>
+                                    <option value="{{ $destino->id }}" {{ $entidade->destinoID == $destino->id ? 'selected' : '' }}>{{ $destino->nomeAeroporto }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="inputAddTitulo">Modelo</label>
-                            <input type="text" class="form-control" id="modelo" name="modelo" value="{{ $entidade->getModelo() }}">
+                            <input type="text" class="form-control" id="modelo" name="modelo" value="{{ $entidade->modelo }}">
                         </div>
                         <div class="form-group">
                             <label for="inputAddTitulo">Quantia de Assentos</label>
-                            <input type="text" class="form-control" id="qntAssentos" name="qntAssentos" value="{{ $entidade->getQntAssentos() }}">
+                            <input type="text" class="form-control" id="qntAssentos" name="qntAssentos" value="{{ $entidade->qntAssentos }}">
                         </div>
                         <div class="form-group">
                             <label for="inputAddTitulo">Quantia de Assentos Especiais</label>
-                            <input type="text" class="form-control" id="qntAssentosEspecial" name="qntAssentosEspecial" value="{{ $entidade->getQntAssentosEspecial() }}">
+                            <input type="text" class="form-control" id="qntAssentosEspecial" name="qntAssentosEspecial" value="{{ $entidade->qntAssentosEspecial }}">
                         </div>
                         <button type="submit" class="adicionar btn btn-primary bg-dark border-dark">Salvar</button>
                     </form>
@@ -120,11 +122,12 @@
             <div class="modal-body">
                 <div class="container-fluid">
                     <form id="formAdicionar" action="aeronaves/create" method="POST">
+                        {{ csrf_field() }}
                         <div class="form-group">
                             <label for="inputAddTitulo">Destino</label>
-                            <select  class="form-control" name="destinoID">
+                            <select  class="form-control" name="destinoid">
                                  @foreach($destinos as $destino)
-                                    <option value="{{ $destino->getID() }}" {{ $entidade->getDestinoID() == $destino->getID() ? 'selected' : '' }}>{{ $destino->getNomeAeroporto() }}</option>
+                                    <option value="{{ $destino->id }}" {{ $entidade->destinoID == $destino->id ? 'selected' : '' }}>{{ $destino->nomeAeroporto }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -147,3 +150,4 @@
         </div>
     </div>
 </div>
+@endsection

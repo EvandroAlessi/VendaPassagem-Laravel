@@ -3,56 +3,50 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Passageiro;
 
 class PassageiroController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth');
+    }
+
     public function index(){
+        return view("Passageiro/index", ["passageiros" => Passageiro::all()]);
+    }
+
+    public function create(Request $request){
         $passageiro = new Passageiro();
 
-        return view("passageiros", ["passageiros" => $passageiro::all()]);
+        $passageiro->CPF = isset($request->CPF) ? $request->CPF : '';
+        $passageiro->RG = isset($request->RG) ? $request->RG : '';
+        $passageiro->nome = isset($request->nome) ? $request->nome : '';
+        $passageiro->dataNascimento = isset($request->dataNascimento) ? $request->dataNascimento : '';
+      
+
+        $passageiro->save();
+
+        return redirect('passageiros');
     }
 
-    public function details(){
-        
-    }
-    
-    public function create(Request $request){
-        $dao = new PassageiroDAO();
-        $CPF = isset($request->data['CPF']) ? $request->data['CPF']  : '';
-        $RG = isset($request->data['RG']) ? $request->data['RG']  : '';
-        $nome = isset($request->data['nome']) ? $request->data['nome']  : '';
-        $dataNascimento = isset($request->data['dataNascimento']) ? $request->data['dataNascimento']  : '';
-        $dao->inserir(new Passageiro(
-            $CPF,
-            $RG,
-            $nome,
-            $dataNascimento
-        ));
+    public function edit(Request $request, $id){
+        $passageiro = Passageiro::findOrFail($id);
 
-        $this->redirect('passageiros');
+        $passageiro->CPF = isset($request->CPF) ? $request->CPF : '';
+        $passageiro->RG = isset($request->RG) ? $request->RG : '';
+        $passageiro->nome = isset($request->nome) ? $request->nome : '';
+        $passageiro->dataNascimento = isset($request->dataNascimento) ? $request->dataNascimento : '';
+      
+
+        $passageiro->save();
+
+        return redirect('passageiros');
     }
 
-    public function edit($request){
-        $dao = new PassageiroDAO();
-        $CPF = isset($request->data['CPF']) ? $request->data['CPF']  : '';
-        $RG = isset($request->data['RG']) ? $request->data['RG']  : '';
-        $nome = isset($request->data['nome']) ? $request->data['nome']  : '';
-        $dataNascimento = isset($request->data['dataNascimento']) ? $request->data['dataNascimento']  : '';
-        $id = $request->params['id'];
-        $passageiro = $dao->buscar($id);
-        $passageiro->setCPF($CPF);
-        $passageiro->setRG($RG);
-        $passageiro->setNome($nome);
-        $passageiro->setDataNascimento($dataNascimento);
-        $dao->editar($passageiro);
+    public function delete($id){
+        $passageiro = Passageiro::FindOrFail($id);
+        $passageiro->delete();
 
-        $this->redirect('passageiros');
-    }
-
-    public function delete($request){
-        $dao = new PassageiroDAO();
-        $dao->excluir($request->params['id']);
-
-        $this->redirect('passageiros');
+        return redirect('passageiros');
     }
 }

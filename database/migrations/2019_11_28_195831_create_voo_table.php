@@ -14,11 +14,16 @@ class CreateVooTable extends Migration
     public function up()
     {
         Schema::create('voo', function (Blueprint $table) {
-            $table->bigIncrements('ID');
-            $table->integer('aeronaveID');
-            $table->dateTime('DataPartida');
+            $table->bigIncrements('id');
+            $table->integer('aeronaveID')->unsigned();;
+            $table->dateTime('dataPartida');
             $table->float('valorPassagem', 10, 2);
             $table->timestamps();
+
+            $table->foreign('aeronaveID')
+                ->references('id')->on('Aeronave')
+                ->onDelete('RESTRICT')
+                ->onUpdate('RESTRICT');
         });
     }
 

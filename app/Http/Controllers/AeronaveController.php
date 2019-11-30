@@ -3,18 +3,24 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Aeronave;
+use App\Destino;
 
 class AeronaveController extends Controller
 {
-    public function index(){
-        $dados['aeronaves'] = Aeronave::all();
-        $dados['destinos'] = Destino::all();
-
-        return view("aeronaves", ["aeronaves" => $dados['aeronaves'], "destinos"=> $dados['destinos']]);
+    public function __construct() {
+        $this->middleware('auth');
     }
 
-    public function details(){
-        
+    public function index(){
+        $dados['aeronaves'] = Aeronave::all();
+        $dados['destinos'] = array();
+
+        foreach (Destino::all() as $key => $value) {
+            $dados['destinos'][$value->id] = $value;
+        }
+
+        return view("Aeronave/index", ["aeronaves" => $dados['aeronaves'], "destinos"=> $dados['destinos']]);
     }
 
     public function create(Request $request){
@@ -27,7 +33,7 @@ class AeronaveController extends Controller
 
         $aeronave.save();
 
-        redirect('aeronaves');
+        return redirect('aeronaves');
     }
 
     public function edit(Request $request, $id){
@@ -39,7 +45,7 @@ class AeronaveController extends Controller
         $aeronave->qntAssentos = isset($request->qntAssentos) ? $request->qntAssentos : '';
         $aeronave->qntAssentosEspecial = isset($request->qntAssentosEspecial) ? $request->qntAssentosEspecial : '';
         
-        redirect('aeronaves');
+        return redirect('aeronaves');
 
     }
 
@@ -49,6 +55,6 @@ class AeronaveController extends Controller
 
         $aeronave.delete();
         
-        redirect('aeronaves');
+        return redirect('aeronaves');
     }
 }

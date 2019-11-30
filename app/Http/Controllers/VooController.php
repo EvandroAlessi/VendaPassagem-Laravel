@@ -3,53 +3,51 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Voo;
+use App\Aeronave;
 
 class VooController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth');
+    }
+    
     public function index(){
-        $voo = new Voo();
-        $aeronave = new Aeronave();
-
-        return view("voos", ["voos" => $voo::all(), "aeronaves"=> $aeronave::all() ]);
+        return view("Voo/index", ["voos" => Voo::all(), "aeronaves"=> Aeronave::all() ]);
     }
 
     public function details(){
         
     }
 
-    public function create($request){
-        $dao = new VooDAO();
-        $dataPartida = isset($request->data['dataPartida']) ? $request->data['dataPartida']  : '';
-        $valorPassagem = isset($request->data['valorPassagem']) ? $request->data['valorPassagem']  : '';
-        $aeronaveID = isset($request->data['aeronaveID']) ? $request->data['aeronaveID']  : '';
-        $dao->inserir(new Voo(
-            $aeronaveID,
-            $dataPartida,
-            $valorPassagem
-        ));
+    public function create(Request $request){
+        $voo = new Voo();
+
+        $voo->dataPartida = isset($request->dataPartida) ? $request->dataPartida : '';
+        $voo->valorPassagem = isset($request->valorPassagem) ? $request->valorPassagem : '';
+        $voo->aeronaveID = isset($request->aeronaveID) ? $request->aeronaveID : '';
         
-        redirect('voos');
+        $voo->save();
+        
+        return redirect('voos');
     }
 
-    public function edit($request){
-        $dao = new VooDAO();
-        $dataPartida = isset($request->data['dataPartida']) ? $request->data['dataPartida']  : '';
-        $valorPassagem = isset($request->data['valorPassagem']) ? $request->data['valorPassagem']  : '';
-        $aeronaveID = isset($request->data['aeronaveID']) ? $request->data['aeronaveID']  : '';
-        $id = $request->params['id'];
-        $voo = $dao->buscar($id);
-        $voo->setDataPartida($dataPartida);
-        $voo->setValorPassagem($valorPassagem).
-        $voo->setAeronaveID($aeronaveID);
-        $dao->editar($voo);
+    public function edit(Request $request, $id){
+        $voo = Voo::findOrFail($id);
 
-        redirect('voos');
+        $voo->dataPartida = isset($request->dataPartida) ? $request->dataPartida : '';
+        $voo->valorPassagem = isset($request->valorPassagem) ? $request->valorPassagem : '';
+        $voo->aeronaveID = isset($request->aeronaveID) ? $request->aeronaveID : '';
+        
+        $voo->save();
+
+        return redirect('voos');
     }
 
-    public function delete($request){
-        $dao = new VooDAO();
-        $dao->excluir($request->params['id']);
-        
-        redirect('voos');
+    public function delete($id){
+        $voo = Voo::FindOrFail($id);
+        $voo->delete();
+
+        return redirect('voos');
     }
 }

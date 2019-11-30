@@ -3,45 +3,43 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Destino;
 
 class DestinoController extends Controller
 {
-    public function index(){
-        $destino = new Destino();
-
-        return view("destinos", ["destinos" => $destino::all()]);
+    public function __construct() {
+        $this->middleware('auth');
     }
-
-    public function details(){
-        
+    
+    public function index(){
+        return view("destino.index", ["destinos" => Destino::all()]);
     }
 
     public function create(Request $request){
-        $destino = new DestinoDAO();
+        $destino = new Destino();
 
-        $destino->taxaEmbarque = isset($request->data['taxaEmbarque']) ? $request->data['taxaEmbarque']  : '';
-        $destino->nomeAeroporto = isset($request->data['nomeAeroporto']) ? $request->data['nomeAeroporto']  : '';
+        $destino->taxaEmbarque = isset($request->taxaEmbarque) ? $request->taxaEmbarque : '';
+        $destino->nomeAeroporto = isset($request->nomeAeroporto) ? $request->nomeAeroporto : '';
 
-        $destino::insert();
+        $destino->save();
 
-        $this->redirect('destinos');
+        return redirect('destinos');
     }
 
     public function edit(Request $request, $id){
-        $dao = new DestinoDAO();
-        $taxaEmbarque = isset($request->data['taxaEmbarque']) ? $request->data['taxaEmbarque']  : '';
-        $nomeAeroporto = isset($request->data['nomeAeroporto']) ? $request->data['nomeAeroporto']  : '';
-        $id = $request->params['id'];
-        $destino = $dao->buscar($id);
-        $destino->setTaxaEmbarque($taxaEmbarque);
-        $destino->setNomeAeroporto($nomeAeroporto);
-        $dao->editar($destino);
-        $this->redirect('destinos');
+        $destino = Destino::findOrFail($id);
+        $destino->taxaEmbarque = isset($request->taxaEmbarque) ? $request->taxaEmbarque : '';
+        $destino->nomeAeroporto = isset($request->nomeAeroporto) ? $request->nomeAeroporto : '';
+        
+        $destino->save();
+        
+        return redirect('destinos');
     }
 
     public function delete($id){
-        $dao = new DestinoDAO();
-        $dao->excluir($request->params['id']);
-        $this->redirect('destinos');
+        $destino = Destino::findOrFail($id);
+        $destino->delete($id);
+        
+        return redirect('destinos');
     }
 }

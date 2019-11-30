@@ -1,3 +1,7 @@
+@extends('Layout')
+
+@section('content')
+
 <link href="Content/plugins/footable/footable.core.css" rel="stylesheet" type="text/css" />
 
 <h3 style="display: inline-block;margin: 15px;">Passageiros</h3>
@@ -26,27 +30,26 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($passageiros as $entidade) {?>
+                            @foreach ($passageiros as $entidade)
                                 <tr>
                                     <td>
-                                        <?=$entidade->getCPF()?>
+                                        {{$entidade->CPF}}
                                     </td>
                                     <td>
-                                        <?=$entidade->getRG()?>
+                                        {{$entidade->RG}}
                                     </td>
                                     <td>
-                                        <?=$entidade->getNome()?>
+                                        {{$entidade->nome}}
                                     </td>
                                     <td>
-                                        <?=$entidade->getDataNascimento()?>
+                                        {{$entidade->dataNascimento}}
                                     </td>
                                     <td style="float: right;">
-                                        <a href="#" data-toggle="modal" data-target="#modalEditar<?=$entidade->getID()?>" style="padding: 3px;"><i class="fa fa-pencil text-navy"></i></a>
-                                        <a href="passageiros/delete/<?=$entidade->getID()?>" style="padding: 3px;"><i class="fa fa-trash text-danger"></i></a>
+                                        <a href="#" data-toggle="modal" data-target="#modalEditar{{$entidade->id}}" style="padding: 3px;"><i class="fa fa-pencil text-navy"></i></a>
+                                        <a href="passageiros/delete/{{$entidade->id}}" style="padding: 3px;"><i class="fa fa-trash text-danger"></i></a>
                                     </td>
                                 </tr>
-
-                            <?php } ?>
+                            @endforeach
                         </tbody>
                         <tfoot>
                             <tr>
@@ -63,9 +66,9 @@
 </div>
 
 
-<?php foreach ($passageiros as $entidade) {?>
+@foreach ($passageiros as $entidade)
 
-<div class="modal" id="modalEditar<?=$entidade->getID()?>" tabindex="-1" role="dialog" aria-labelledby="labelModal" aria-hidden="true">
+<div class="modal" id="modalEditar{{$entidade->id}}" tabindex="-1" role="dialog" aria-labelledby="labelModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content text-center">
             <div class="modal-header">
@@ -76,22 +79,23 @@
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
-                    <form id="formAdicionar<?=$entidade->getID()?>" action="passageiros/edit/<?=$entidade->getID()?>" method="POST">
+                    <form id="formAdicionar{{$entidade->id}}" action="passageiros/edit/{{$entidade->id}}" method="POST">
+                        {{ csrf_field() }}
                         <div class="form-group">
                             <label for="inputAddTitulo">CPF</label>
-                            <input type="text" class="form-control" id="CPF" name="CPF" value="<?=$entidade->getCPF()?>">
+                            <input type="text" class="form-control" id="CPF" name="CPF" value="{{$entidade->CPF}}">
                         </div>
                         <div class="form-group">
                             <label for="inputAddTitulo">RG</label>
-                            <input type="text" class="form-control" id="RG" name="RG" value="<?=$entidade->getRG()?>">
+                            <input type="text" class="form-control" id="RG" name="RG" value="{{$entidade->RG}}">
                         </div>
                         <div class="form-group">
                             <label for="inputAddTitulo">Nome</label>
-                            <input type="text" class="form-control" id="nome" name="nome" value="<?=$entidade->getNome()?>">
+                            <input type="text" class="form-control" id="nome" name="nome" value="{{$entidade->nome}}">
                         </div>
                         <div class="form-group">
                             <label for="inputAddTitulo">Data de Nascimento</label>
-                            <input type="date" class="form-control" id="dataNascimento" name="dataNascimento" value="<?=$entidade->getdataNascimento()?>">
+                            <input type="date" class="form-control" id="dataNascimento" name="dataNascimento" value="{{$entidade->dataNascimento}}">
                         </div>
                         <button type="submit" class="adicionar btn btn-primary bg-dark border-dark">Salvar</button>
                     </form>
@@ -101,7 +105,7 @@
     </div>
 </div>
 
-<?php } ?>
+@endforeach
 
 <div class="modal" id="modalAdicionar" tabindex="-1" role="dialog" aria-labelledby="labelModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -115,6 +119,7 @@
             <div class="modal-body">
                 <div class="container-fluid">
                     <form id="formAdicionar" action="passageiros/create" method="POST">
+                        {{ csrf_field() }}
                         <div class="form-group">
                             <label for="inputAddTitulo">CPF</label>
                             <input type="text" class="form-control" id="CPF" name="CPF">
@@ -142,7 +147,7 @@
 <script src="Scripts/plugins/footable/footable.all.min.js"></script>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function  {
 
         $('.footable').footable();
 
@@ -151,3 +156,4 @@
         });
     });
 </script>
+@endsection

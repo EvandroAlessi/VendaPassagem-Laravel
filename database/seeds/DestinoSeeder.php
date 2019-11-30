@@ -13,8 +13,8 @@ class DestinoSeeder extends Seeder
     {
         for ($i=0; $i < 10; $i++) { 
             DB::table("Destino")->insert([
-                'nomeAeroporto' => str_random(50),
-                'taxaEmbarque' => rand()
+                'nomeAeroporto' => Str::random(10),
+                'taxaEmbarque' => rand(1,1000)
             ]);
         }
     }

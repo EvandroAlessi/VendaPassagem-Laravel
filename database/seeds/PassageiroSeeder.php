@@ -13,10 +13,10 @@ class PassageiroSeeder extends Seeder
     {
         for ($i=0; $i < 10; $i++) { 
             DB::table("Passageiro")->insert([
-                'CPF' => str_random(18),
-                'RG' => str_random(16),
-                'nome' => str_random(20),
-                'dataNascimento' => rand(),
+                'CPF' => Str::random(18),
+                'RG' => Str::random(16),
+                'nome' => Str::random(20),
+                'dataNascimento' => date("Y-m-d H:i:s", mt_rand(1262055681,1262055681))
             ]);
         }
     }
